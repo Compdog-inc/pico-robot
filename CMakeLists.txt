@@ -24,7 +24,7 @@ configure_file( config.h.in ${CMAKE_BINARY_DIR}/generated/pico-robot/config.h )
 include_directories( ${CMAKE_BINARY_DIR}/generated/pico-robot/ ) 
 
 add_library(pico-robot STATIC
-        
+        src/kinematics/differentialdrive.cpp
         )
         
 target_include_directories(pico-robot PRIVATE
