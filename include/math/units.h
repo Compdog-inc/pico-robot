@@ -17,7 +17,7 @@ private:
     static constexpr T METER_TO_INCH = 39.3701;
     static constexpr T RADIANS_TO_DEGREES = 180.0 / M_PI;
 
-    const T value;
+    T value;
 
     constexpr Units(const T value) : value(value)
     {
