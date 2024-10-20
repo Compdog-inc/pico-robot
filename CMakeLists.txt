@@ -27,6 +27,8 @@ add_library(pico-robot STATIC
         src/math/random.cpp
         src/kinematics/differentialdrive.cpp
         src/board/temperature.cpp
+
+        src/packets/control/xbox.cpp
         )
         
 target_include_directories(pico-robot PRIVATE
