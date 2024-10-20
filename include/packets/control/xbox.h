@@ -28,15 +28,24 @@ namespace Control
         virtual ssize_t fromBytes(const uint8_t *bytes, size_t length);
         virtual ssize_t toBytes(uint8_t *bytes, size_t length);
 
+        struct buttons_bitfield
+        {
+            uint8_t button_A : 1;
+            uint8_t button_B : 1;
+            uint8_t button_X : 1;
+            uint8_t button_Y : 1;
+            uint8_t button_LB : 1;
+            uint8_t button_RB : 1;
+            uint8_t button_6 : 1;
+            uint8_t button_7 : 1;
+        };
+
         // byte 0
-        uint8_t button_A : 1;
-        uint8_t button_B : 1;
-        uint8_t button_X : 1;
-        uint8_t button_Y : 1;
-        uint8_t button_LB : 1;
-        uint8_t button_RB : 1;
-        uint8_t button_6 : 1;
-        uint8_t button_7 : 1;
+        union
+        {
+            uint8_t buttons_u8;
+            buttons_bitfield buttons;
+        };
 
         // byte 1-2
         int16_t axis_X;
