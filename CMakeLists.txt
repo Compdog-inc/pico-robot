@@ -26,6 +26,7 @@ include_directories( ${CMAKE_BINARY_DIR}/generated/pico-robot/ )
 add_library(pico-robot STATIC
         src/math/random.cpp
         src/kinematics/differentialdrive.cpp
+        src/board/temperature.cpp
         )
         
 target_include_directories(pico-robot PRIVATE
@@ -34,5 +35,6 @@ target_include_directories(pico-robot PRIVATE
         )
 target_link_libraries(pico-robot
         pico_stdlib
+        hardware_adc
         pico_rand
         )

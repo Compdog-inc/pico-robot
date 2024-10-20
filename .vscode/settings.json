@@ -3,6 +3,7 @@
         "*.ejs": "html",
         "*.in": "cpp",
         "limits": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "adc.h": "c"
     }
 }
