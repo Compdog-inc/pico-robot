@@ -1,10 +1,14 @@
 #include <cstring>
 #include "packets/control/xbox.h"
 
-ssize_t Control::Xbox::fromBytes(const uint8_t *bytes, size_t length)
+static uint32_t latestPacketTimestamp = 0;
+
+ssize_t Control::Xbox::deserializePacket(const uint8_t *bytes, size_t length, const Header &header)
 {
-    if (length >= size)
+    if (header.timestamp >= latestPacketTimestamp && length >= size)
     {
+        latestPacketTimestamp = header.timestamp;
+
         std::memcpy(&buttons_u8, &bytes[0], 1);
         std::memcpy(&axis_X, &bytes[1], sizeof(axis_X));
         std::memcpy(&axis_Y, &bytes[3], sizeof(axis_Y));
@@ -19,7 +23,7 @@ ssize_t Control::Xbox::fromBytes(const uint8_t *bytes, size_t length)
     return -1;
 }
 
-ssize_t Control::Xbox::toBytes(uint8_t *bytes, size_t length)
+ssize_t Control::Xbox::serializePacket(uint8_t *bytes, size_t length, const Header &header)
 {
     if (length >= size)
     {

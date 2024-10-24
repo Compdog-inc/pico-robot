@@ -28,6 +28,7 @@ add_library(pico-robot STATIC
         src/kinematics/differentialdrive.cpp
         src/board/temperature.cpp
 
+        src/packets/serializedpacket.cpp
         src/packets/control/xbox.cpp
         )
         

@@ -11,6 +11,10 @@ namespace Control
 {
     struct Xbox : public SerializedPacket
     {
+    protected:
+        virtual ssize_t deserializePacket(const uint8_t *bytes, size_t length, const Header &header);
+        virtual ssize_t serializePacket(uint8_t *bytes, size_t length, const Header &header);
+
     public:
         enum class POVAngle : uint8_t
         {
@@ -24,9 +28,6 @@ namespace Control
             Deg_270 = 7,
             Deg_315 = 8
         };
-
-        virtual ssize_t fromBytes(const uint8_t *bytes, size_t length);
-        virtual ssize_t toBytes(uint8_t *bytes, size_t length);
 
         struct buttons_bitfield
         {
