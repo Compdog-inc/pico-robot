@@ -5,7 +5,8 @@ bool SerializedPacket::readHeader(const uint8_t *bytes, size_t length, Header *h
     if (length < HEADER_SIZE)
         return false;
     *header = {};
-    std::memcpy(&header->timestamp, &bytes[0], sizeof(header->timestamp));
+    std::memcpy(&header->session, &bytes[0], sizeof(header->session));
+    std::memcpy(&header->timestamp, &bytes[1], sizeof(header->timestamp));
     return true;
 }
 
@@ -13,7 +14,8 @@ bool SerializedPacket::writeHeader(uint8_t *bytes, size_t length, const Header &
 {
     if (length < HEADER_SIZE)
         return false;
-    std::memcpy(&bytes[0], &header, HEADER_SIZE);
+    std::memcpy(&bytes[0], &header.session, sizeof(header.session));
+    std::memcpy(&bytes[1], &header.timestamp, sizeof(header.timestamp));
     return true;
 }
 
@@ -32,6 +34,7 @@ static uint32_t packet_timestamp = 0;
 ssize_t SerializedPacket::serialize(uint8_t *bytes, size_t length)
 {
     Header header = {};
+    header.session = 255; /* host session */
     header.timestamp = packet_timestamp++;
 
     if (!writeHeader(bytes, length, header))

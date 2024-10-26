@@ -1,12 +1,14 @@
 #include <cstring>
 #include "packets/control/xbox.h"
 
+static uint8_t latestPacketSession = 0;
 static uint32_t latestPacketTimestamp = 0;
 
 ssize_t Control::Xbox::deserializePacket(const uint8_t *bytes, size_t length, const Header &header)
 {
-    if (header.timestamp >= latestPacketTimestamp && length >= size)
+    if ((header.session != latestPacketSession || header.timestamp >= latestPacketTimestamp) && length >= size)
     {
+        latestPacketSession = header.session;
         latestPacketTimestamp = header.timestamp;
 
         std::memcpy(&buttons_u8, &bytes[0], 1);
