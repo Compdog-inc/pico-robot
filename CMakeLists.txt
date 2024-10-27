@@ -11,6 +11,14 @@ if (PICO_SDK_VERSION_STRING VERSION_LESS "2.0.0")
         message(FATAL_ERROR "Raspberry Pi Pico SDK version 2.0.0 (or later) required. Your version is ${PICO_SDK_VERSION_STRING}")
 endif()
 
+if(PICO_CYW43_SUPPORTED)
+        set(PICO_ROBOT_LED_PATH src/board/ledw.cpp)
+        set(PICO_ROBOT_ADDITIONAL_LIBRARIES pico_cyw43_arch_lwip_sys_freertos FreeRTOS-Kernel-Heap4)
+else()
+        set(PICO_ROBOT_LED_PATH src/board/led.cpp)
+        set(PICO_ROBOT_ADDITIONAL_LIBRARIES "")
+endif()
+
 # Initialize the SDK
 pico_sdk_init()
 
@@ -25,8 +33,11 @@ include_directories( ${CMAKE_BINARY_DIR}/generated/pico-robot/ )
 
 add_library(pico-robot STATIC
         src/math/random.cpp
+
         src/kinematics/differentialdrive.cpp
+        
         src/board/temperature.cpp
+        ${PICO_ROBOT_LED_PATH}
 
         src/packets/serializedpacket.cpp
         src/packets/control/xbox.cpp
@@ -36,8 +47,11 @@ target_include_directories(pico-robot PRIVATE
         ${CMAKE_CURRENT_LIST_DIR}/include
         ${CMAKE_CURRENT_LIST_DIR}/..
         )
+
 target_link_libraries(pico-robot
         pico_stdlib
         hardware_adc
+        hardware_pwm
         pico_rand
-        )
+        ${PICO_ROBOT_ADDITIONAL_LIBRARIES}
+)
