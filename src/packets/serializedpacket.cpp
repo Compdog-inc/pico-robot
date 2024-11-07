@@ -1,4 +1,5 @@
 #include "packets/serializedpacket.h"
+#include <pico/time.h>
 
 bool SerializedPacket::readHeader(const uint8_t *bytes, size_t length, Header *header)
 {
@@ -29,13 +30,11 @@ ssize_t SerializedPacket::deserialize(const uint8_t *bytes, size_t length)
     return deserializePacket(bytes, length, header);
 }
 
-static uint32_t packet_timestamp = 0;
-
 ssize_t SerializedPacket::serialize(uint8_t *bytes, size_t length)
 {
     Header header = {};
     header.session = 255; /* host session */
-    header.timestamp = packet_timestamp++;
+    header.timestamp = get_absolute_time();
 
     if (!writeHeader(bytes, length, header))
         return -1;

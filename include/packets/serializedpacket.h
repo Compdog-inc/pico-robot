@@ -12,7 +12,7 @@ public:
     struct Header
     {
         uint8_t session;
-        uint32_t timestamp;
+        uint64_t timestamp;
     };
 
 protected:
@@ -20,7 +20,7 @@ protected:
     virtual ssize_t serializePacket(uint8_t *bytes, size_t length, const Header &header) = 0;
 
 public:
-    static constexpr size_t HEADER_SIZE = 5;
+    static constexpr size_t HEADER_SIZE = 9;
 
     static bool readHeader(const uint8_t *bytes, size_t length, Header *header);
     static bool writeHeader(uint8_t *bytes, size_t length, const Header &header);
