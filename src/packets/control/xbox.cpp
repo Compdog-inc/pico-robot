@@ -1,12 +1,15 @@
 #include <cstring>
+#include <pico/time.h>
 #include "packets/control/xbox.h"
 
 static uint8_t latestPacketSession = 0;
-static uint32_t latestPacketTimestamp = 0;
+static uint64_t latestPacketTimestamp = 0;
 
 ssize_t Control::Xbox::deserializePacket(const uint8_t *bytes, size_t length, const Header &header)
 {
-    if ((header.session != latestPacketSession || header.timestamp >= latestPacketTimestamp) && length >= size)
+    auto timestampDiff = absolute_time_diff_us(header.timestamp, get_absolute_time());
+
+    if ((header.session != latestPacketSession || header.timestamp >= latestPacketTimestamp) && length >= size && std::abs(timestampDiff) <= MAX_LATENCY_US)
     {
         latestPacketSession = header.session;
         latestPacketTimestamp = header.timestamp;

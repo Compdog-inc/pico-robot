@@ -69,6 +69,8 @@ namespace Control
         {
             return (float)axis / (float)INT16_MAX;
         }
+
+        static constexpr int64_t MAX_LATENCY_US = 100 /* ms */ * 1000 /* ms to us */;
     };
 }
 
