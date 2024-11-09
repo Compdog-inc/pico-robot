@@ -26,6 +26,7 @@
 #define _gcem_sqrt_HPP
 
 #include "gcem_options.hpp"
+#include "abs.hpp"
 #include "is_nan.hpp"
 #include "is_inf.hpp"
 

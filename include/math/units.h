@@ -73,6 +73,12 @@ public:
         return other.value == value;
     }
 
+    template <class T0>
+    void pack(T0 &pack)
+    {
+        pack(value);
+    }
+
     inline constexpr bool operator==(const Units<T> &other) { return equals(other); }
     inline constexpr bool operator!=(const Units<T> &other) { return !equals(other); }
 };

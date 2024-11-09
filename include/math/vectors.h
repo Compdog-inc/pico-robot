@@ -3,6 +3,8 @@
 
 #include <stdlib.h>
 #include "gcem/sqrt.hpp"
+#include "gcem/cos.hpp"
+#include "gcem/sin.hpp"
 #include <stdint.h>
 #include "math/units.h"
 
@@ -12,6 +14,12 @@ struct vec2
 {
     Units<T> x;
     Units<T> y;
+
+    template <class T0>
+    void pack(T0 &pack)
+    {
+        pack(x, y);
+    }
 
     constexpr vec2() : vec2(Units<T>::meters(0), Units<T>::meters(0))
     {
@@ -56,6 +64,12 @@ struct vec3
     Units<T> x;
     Units<T> y;
     Units<T> z;
+
+    template <class T0>
+    void pack(T0 &pack)
+    {
+        pack(x, y, z);
+    }
 
     constexpr vec3() : vec3(Units<T>::meters(0), Units<T>::meters(0), Units<T>::meters(0))
     {
@@ -111,6 +125,12 @@ struct vec4
     Units<T> z;
     Units<T> w;
 
+    template <class T0>
+    void pack(T0 &pack)
+    {
+        pack(x, y, z, w);
+    }
+
     constexpr vec4() : vec4(Units<T>::meters(0), Units<T>::meters(0), Units<T>::meters(0), Units<T>::meters(0))
     {
     }
@@ -125,6 +145,22 @@ struct vec4
 
     constexpr vec4(Units<T> x, Units<T> y) : vec4(x, y, Units<T>::meters(0), Units<T>::meters(0))
     {
+    }
+
+    static constexpr vec4<T> fromEuler(const Units<T> x, const Units<T> y, const Units<T> z)
+    {
+        T cx = (T)gcem::cos(x.radians() * 0.5);
+        T sx = (T)gcem::sin(x.radians() * 0.5);
+        T cy = (T)gcem::cos(y.radians() * 0.5);
+        T sy = (T)gcem::sin(y.radians() * 0.5);
+        T cz = (T)gcem::cos(z.radians() * 0.5);
+        T sz = (T)gcem::sin(z.radians() * 0.5);
+
+        return vec4<T>(
+            Units<T>::radians(sz * cx * cy - cz * sx * sy),
+            Units<T>::radians(cz * sx * cy + sz * cx * sy),
+            Units<T>::radians(cz * cx * sy - sz * sx * cy),
+            Units<T>::radians(cz * cx * cy + sz * sx * sy));
     }
 
     constexpr Units<T> length() const
@@ -155,6 +191,36 @@ struct vec4
 
     inline constexpr bool operator==(const vec4<T> &other) { return equals(other); }
     inline constexpr bool operator!=(const vec4<T> &other) { return !equals(other); }
+};
+
+template <typename T>
+    requires arithmetic<T>
+struct transform
+{
+    vec3<T> position;
+    vec4<T> rotation;
+
+    template <class T0>
+    void pack(T0 &pack)
+    {
+        pack(position, rotation);
+    }
+
+    constexpr transform() : transform({}, {})
+    {
+    }
+
+    constexpr transform(vec3<T> position, vec4<T> rotation) : position(position), rotation(rotation)
+    {
+    }
+
+    constexpr bool equals(const transform<T> &other) const
+    {
+        return other.position == position && other.rotation == rotation;
+    }
+
+    inline constexpr bool operator==(const transform<T> &other) { return equals(other); }
+    inline constexpr bool operator!=(const transform<T> &other) { return !equals(other); }
 };
 
 #endif
