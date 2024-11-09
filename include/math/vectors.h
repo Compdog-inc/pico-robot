@@ -16,7 +16,7 @@ struct vec2
     Units<T> y;
 
     template <class T0>
-    void pack(T0 &pack)
+    void pack(T0 &pack) const
     {
         pack(x, y);
     }
@@ -66,7 +66,7 @@ struct vec3
     Units<T> z;
 
     template <class T0>
-    void pack(T0 &pack)
+    void pack(T0 &pack) const
     {
         pack(x, y, z);
     }
@@ -126,7 +126,7 @@ struct vec4
     Units<T> w;
 
     template <class T0>
-    void pack(T0 &pack)
+    void pack(T0 &pack) const
     {
         pack(x, y, z, w);
     }
@@ -201,7 +201,7 @@ struct transform
     vec4<T> rotation;
 
     template <class T0>
-    void pack(T0 &pack)
+    void pack(T0 &pack) const
     {
         pack(position, rotation);
     }

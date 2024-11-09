@@ -74,7 +74,7 @@ public:
     }
 
     template <class T0>
-    void pack(T0 &pack)
+    void pack(T0 &pack) const
     {
         pack(value);
     }
